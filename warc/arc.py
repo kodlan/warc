@@ -4,11 +4,11 @@ Provides support for ARC v1 files.
 :copyright: (c) 2012 Internet Archive
 """
 
-import __builtin__
+import builtins
 import datetime
 import os
 import re
-import StringIO
+from io import StringIO
 import warnings
 
 from .utils import CaseInsensitiveDict

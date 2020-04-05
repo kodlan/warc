@@ -7,12 +7,12 @@ Python library to work with WARC files.
 :copyright: (c) 2012 Internet Archive
 """
 
-import __builtin__
+import builtins
 import datetime
 import uuid
 import logging
 import re
-from cStringIO import StringIO
+from io import StringIO
 import hashlib
 
 from . import gzip2
@@ -244,7 +244,7 @@ class WARCRecord(object):
 class WARCFile:
     def __init__(self, filename=None, mode=None, fileobj=None, compress=None):
         if fileobj is None:
-            fileobj = __builtin__.open(filename, mode or "rb")
+            fileobj = builtins.open(filename, mode or "rb")
             mode = fileobj.mode
         # initiaize compress based on filename, if not already specified
         if compress is None and filename and filename.endswith(".gz"):
@@ -322,7 +322,7 @@ class WARCReader:
         self.current_payload = None
         
     def read_header(self, fileobj):
-        version_line = fileobj.readline()
+        version_line = fileobj.readline().decode("utf-8")
         if not version_line:
             return None
             
@@ -335,7 +335,7 @@ class WARCReader:
             
         headers = {}
         while True:
-            line = fileobj.readline()
+            line = fileobj.readline().decode("utf-8")
             if line == "\r\n": # end of headers
                 break
             m = self.RE_HEADER.match(line)
@@ -346,7 +346,7 @@ class WARCReader:
         return WARCHeader(headers)
         
     def expect(self, fileobj, expected_line, message=None):
-        line = fileobj.readline()
+        line = fileobj.readline().decode("utf-8")
         if line != expected_line:
             message = message or "Expected %r, found %r" % (expected_line, line)
             raise IOError(message)
